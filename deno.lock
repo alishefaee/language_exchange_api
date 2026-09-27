@@ -2,6 +2,7 @@
   "version": "5",
   "specifiers": {
     "jsr:@hono/hono@^4.13.8": "4.13.9",
+    "npm:bcryptjs@^3.0.3": "3.0.3",
     "npm:mongoose@^8.7.0": "8.24.4",
     "npm:mongoose@^9.10.2": "9.10.2"
   },
@@ -34,6 +35,10 @@
       "dependencies": [
         "@types/webidl-conversions"
       ]
+    },
+    "bcryptjs@3.0.3": {
+      "integrity": "sha512-GlF5wPWnSa/X5LKM1o0wz0suXIINz1iHRLvTS+sLyi7XPbe5ycmYI3DlZqVGZZtDgl4DmasFg7gOB3JYbphV5g==",
+      "bin": true
     },
     "bson@6.10.4": {
       "integrity": "sha512-WIsKqkSC0ABoBJuT1LEX+2HEvNmNKKgnTAyd0fL8qzK4SH2i9NXg+t08YtdZp/V9IZ33cxe3iV4yM0qg8lMQng=="
@@ -157,6 +162,7 @@
   "workspace": {
     "dependencies": [
       "jsr:@hono/hono@^4.13.8",
+      "npm:bcryptjs@^3.0.3",
       "npm:mongoose@^9.10.2"
     ]
   }
