@@ -1,25 +1,25 @@
-import type { Context } from "hono";
+import type { Context } from "hono"
 // --- Onboarding Controllers ---
-export const getOnboardingState = async (c: Context) => {
-    return c.json({test: "Test"})
-};
+export const getOnboardingState = (c: Context) => {
+  return c.json({ test: "Test" })
+}
 
-export const updateIdentity = async (c: Context) => {
-    // TODO: Implement update identity demographics
-};
+export const updateIdentity = (_c: Context) => {
+  // TODO: Implement update identity demographics
+}
 
-export const updateLocations = async (c: Context) => {
-    // TODO: Implement update locations
-};
+export const updateLocations = (_c: Context) => {
+  // TODO: Implement update locations
+}
 
-export const updateLanguages = async (c: Context) => {
-    // TODO: Implement update language proficiencies
-};
+export const updateLanguages = (_c: Context) => {
+  // TODO: Implement update language proficiencies
+}
 
-export const getAvatarUploadUrl = async (c: Context) => {
-    // TODO: Implement presigned URL generation for avatar
-};
+export const getAvatarUploadUrl = (_c: Context) => {
+  // TODO: Implement presigned URL generation for avatar
+}
 
-export const completeOnboarding = async (c: Context) => {
-    // TODO: Implement finalize onboarding and mark profile active
-};
+export const completeOnboarding = (_c: Context) => {
+  // TODO: Implement finalize onboarding and mark profile active
+}

@@ -1,21 +1,21 @@
-import type { Context } from "hono";
+import type { Context } from "hono"
 // --- Conversations Controllers ---
-export const getConversations = async (c: Context) => {
-    // TODO: Implement fetch paginated list of conversations
-};
+export const getConversations = async (_c: Context) => {
+  // TODO: Implement fetch paginated list of conversations
+}
 
-export const createConversation = async (c: Context) => {
-    // TODO: Implement create new conversation
-};
+export const createConversation = async (_c: Context) => {
+  // TODO: Implement create new conversation
+}
 
-export const deleteConversation = async (c: Context) => {
-    // TODO: Implement clear chat history for the current user
-};
+export const deleteConversation = async (_c: Context) => {
+  // TODO: Implement clear chat history for the current user
+}
 
-export const getConversationMessages = async (c: Context) => {
-    // TODO: Implement fetch paginated messages for a conversation
-};
+export const getConversationMessages = async (_c: Context) => {
+  // TODO: Implement fetch paginated messages for a conversation
+}
 
-export const sendConversationMessage = async (c: Context) => {
-    // TODO: Implement send new message
-};
+export const sendConversationMessage = async (_c: Context) => {
+  // TODO: Implement send new message
+}

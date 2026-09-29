@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+set -e
+
+echo "Running Deno formatting and linting..."
+
+deno fmt && git add -u
+
+# Run linter
+deno lint
+echo "✅ All checks passed! Proceeding with commit."
