@@ -1,29 +1,29 @@
 import { Hono } from "hono"
-import mongoose from "mongoose"
+import { logger } from "hono/logger"
+import { getLogger } from "@std/log"
+
 import * as authController from "./controllers/auth.ts"
 import * as userController from "./controllers/users.ts"
 import * as conversationController from "./controllers/conversations.ts"
 import * as messageController from "./controllers/messages.ts"
 
-const MONGODB_URI = Deno.env.get("MONGODB_URI")
+const app = new Hono()
 
-if (!MONGODB_URI) {
-  console.error("Fatal Error: MONGODB_URI environment variable is not set.")
-  Deno.exit(1)
-}
+// Middleware
+app.use(logger((message, ...rest) => {
+  // Fetch logger dynamically inside the callback so it uses
+  // the configuration initialized in main.ts
+  const appLogger = getLogger()
+  appLogger.info(`${message} ${rest.join(" ")}`)
+}))
 
-mongoose.connect(MONGODB_URI)
-  .then(() => console.log("Successfully connected to MongoDB"))
-  .catch((error) => {
-    console.error("MongoDB connection failed:", error)
-    Deno.exit(1)
-  })
+const router = new Hono()
 
-export const router = new Hono()
-
+// Auth Routes
 router.post("/auth/register", authController.register)
 router.post("/auth/login", authController.login)
 
+// User Routes
 router.get("/users/state", userController.getOnboardingState)
 router.patch("/users/identity", userController.updateIdentity)
 router.patch("/users/locations", userController.updateLocations)
@@ -31,10 +31,17 @@ router.patch("/users/languages", userController.updateLanguages)
 router.post("/users/avatar-upload-url", userController.getAvatarUploadUrl)
 router.post("/users/complete", userController.completeOnboarding)
 
+// Conversation Routes
 router.get("/conversations/", conversationController.getConversations)
 router.post("/conversations/", conversationController.createConversation)
 router.delete("/conversations/:id", conversationController.deleteConversation)
 router.get("/conversations/:id/messages", conversationController.getConversationMessages)
 router.post("/conversations/:id/messages", conversationController.sendConversationMessage)
 
+// Message Routes
 router.delete("/:id", messageController.deleteMessage)
+
+// Mount the router onto the main app
+app.route("/api/v1", router)
+
+export { app }

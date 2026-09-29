@@ -1,7 +1,7 @@
 {
   "tasks": {
     "dev": "deno run --watch --env-file --allow-env --allow-net src/main.ts",
-    "start": "deno run --env-file --allow-env --allow-net src/main.ts",
+    "start": "deno run --env-file --allow-env --allow-net --allow-write --allow-read --allow-sys src/main.ts",
 
     "prepare": "git config core.hooksPath .githooks",
     "check": "deno check src/main.ts",
@@ -19,6 +19,7 @@
 
   "imports": {
     "@std/assert": "jsr:@std/assert@^1.0.19",
+    "@std/log": "jsr:@std/log@^0.224.14",
     "bcryptjs": "npm:bcryptjs@^3.0.3",
     "hono": "npm:hono@^4.13.9",
     "mongoose": "npm:mongoose@^9.10.2"
