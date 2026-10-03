@@ -1,32 +1,24 @@
 import type { Context } from "hono"
 import { UserService } from "../services/user_service.ts"
-import { hashPassword, TokenService, verifyPassword } from "../helpers/security_helper.ts"
+import { TokenService, verifyPassword } from "../helpers/security_helper.ts"
+import { reply } from "../helpers/api_resp.ts"
+import { getLogger } from "@std/log"
+
+const logger = getLogger()
 // --- Auth Controllers ---
 export const register = async (c: Context) => {
   try {
-    const body = await c.req.json()
-    const { email, username, password } = body
+    const { email, password } = await c.req.json<any>()
 
-    if (!email || !username || !password) {
-      return c.json({
-        error: "Missing required fields: email, username, and password are required.",
-      }, 400)
-    }
-
-    // Secure the password before passing it to the database service
-    const passwordHash = await hashPassword(password)
-
-    const user = await UserService.createUser({
-      email,
-      username,
-      passwordHash,
-    })
+    // The service returns pure data, completely unaware of HTTP
+    const user = await UserService.createUser({ email, password })
 
     const deviceId = c.req.header("user-agent")
     const accessToken = await TokenService.generateAccessToken(user.id)
     const refreshToken = await UserService.createSession(user.id, deviceId)
 
-    return c.json({
+    // The controller formats the pure data into the ApiResponse structure
+    return reply.success(c, "CREATED", {
       user: {
         id: user.id,
         email: user.email,
@@ -36,39 +28,42 @@ export const register = async (c: Context) => {
       refresh_token: refreshToken,
       expires_in: 3600,
       token_type: "Bearer",
-    }, 201)
+    })
   } catch (error: any) {
-    // Handle specific mock database errors (e.g., "Email already exists")
-    return c.json({ error: error.message || "Failed to register user" }, 400)
+    // 1. Handle expected business errors thrown by the Service
+    if (error.message === "DUPLICATE_USER") {
+      return reply.error(c, "BAD_REQUEST", {
+        message: "This email is already registered.",
+      })
+    }
+
+    // 2. Handle unexpected fatal errors (Database offline, syntax errors, etc.)
+    logger.error(error.message)
+    return reply.error(c, "INTERNAL_ERROR")
   }
 }
 
 export const login = async (c: Context) => {
   try {
-    const body = await c.req.json()
-    const { email, password } = body
-
-    if (!email || !password) {
-      return c.json({ error: "Email and password are required" }, 400)
-    }
+    const { email, password } = await c.req.json<any>()
 
     // Retrieve the user from the database by email
     const user = await UserService.getUserByEmail(email)
     if (!user) {
-      return c.json({ error: "Invalid credentials" }, 401)
+      return reply.error(c, "AUTH_USER_NOT_FOUND")
     }
 
     // Verify the incoming plain-text password against the stored bcrypt hash
     const isPasswordValid = await verifyPassword(password, user.passwordHash)
     if (!isPasswordValid) {
-      return c.json({ error: "Invalid credentials" }, 401)
+      return reply.error(c, "AUTH_USER_NOT_FOUND")
     }
 
     const deviceId = c.req.header("user-agent")
-    const accessToken = TokenService.generateAccessToken(user.id)
+    const accessToken = await TokenService.generateAccessToken(user.id)
     const refreshToken = await UserService.createSession(user.id, deviceId)
 
-    return c.json({
+    return reply.success(c, "OK", {
       user: {
         id: user.id,
         email: user.email,
@@ -78,9 +73,10 @@ export const login = async (c: Context) => {
       refresh_token: refreshToken,
       expires_in: 3600,
       token_type: "Bearer",
-    }, 200)
-  } catch (_error: any) {
-    return c.json({ error: "Internal Server Error" }, 500)
+    })
+  } catch (error: any) {
+    logger.error(error.message)
+    return reply.error(c, "INTERNAL_ERROR")
   }
 }
 

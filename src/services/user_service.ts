@@ -1,36 +1,50 @@
 import { User } from "../models/User.ts"
 import { Session } from "../models/Session.ts"
-import { REFRESH_TOKEN_EXPIRATION_MS, TokenService } from "../helpers/security_helper.ts"
+import {
+  hashPassword,
+  REFRESH_TOKEN_EXPIRATION_MS,
+  TokenService,
+} from "../helpers/security_helper.ts"
+import { generateRandomUsername } from "../helpers/generate_random_username.ts"
+import { getLogger } from "@std/log"
+
+const logger = getLogger()
 
 export class UserService {
   /**
    * Validates uniqueness and creates a new user record.
    */
-  static async createUser(data: { email: string; username: string; passwordHash: string }) {
-    const existingUser = await User.findOne({
-      $or: [{ email: data.email }, { username: data.username }],
-    }).select("_id")
-
-    if (existingUser) {
-      throw new Error("Email or username already exists")
-    }
+  static async createUser(data: { email: string; password: string }) {
+    const passwordHash = await hashPassword(data.password)
 
     const user = new User({
       email: data.email,
-      username: data.username,
-      passwordHash: data.passwordHash,
+      username: generateRandomUsername(),
+      passwordHash: passwordHash,
       onboardingStep: "identity",
     })
 
-    await user.save()
-    return user
+    try {
+      await user.save()
+      return user
+    } catch (error: any) {
+      // 11000 is the standard MongoDB error code for a unique index violation
+      if (error.name === "MongoServerError" && error.code === 11000) {
+        // error.keyPattern will look like { email: 1 } or { username: 1 }
+        logger.info(error.keyPattern)
+        throw new Error("DUPLICATE_USER")
+      }
+
+      // Re-throw any other database errors (e.g., validation failures or connection drops)
+      throw error
+    }
   }
 
   /**
    * Retrieves a user by their email address for login verification.
    */
-  static async getUserByEmail(email: string) {
-    return await User.findOne({ email })
+  static getUserByEmail(email: string) {
+    return User.findOne({ email })
   }
 
   /**
