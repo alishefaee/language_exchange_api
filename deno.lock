@@ -8,10 +8,12 @@
     "jsr:@std/io@~0.225.2": "0.225.3",
     "jsr:@std/log@*": "0.224.14",
     "jsr:@std/log@~0.224.14": "0.224.14",
+    "npm:@hono/zod-validator@~0.9.1": "0.9.1_hono@4.13.9_zod@4.6.5",
     "npm:bcryptjs@^3.0.3": "3.0.3",
     "npm:hono@^4.13.9": "4.13.9",
     "npm:mongoose@^8.7.0": "8.24.4",
-    "npm:mongoose@^9.10.2": "9.10.2"
+    "npm:mongoose@^9.10.2": "9.10.2",
+    "npm:zod@^4.6.5": "4.6.5"
   },
   "jsr": {
     "@std/assert@1.0.19": {
@@ -42,6 +44,13 @@
     }
   },
   "npm": {
+    "@hono/zod-validator@0.9.1_hono@4.13.9_zod@4.6.5": {
+      "integrity": "sha512-iiv6w0qrIc0arfvCtUqBWsvl4fXjzaTcQcCJTTtCnkawF9HHGE+KjEl0ox3gQJ6rKZEgE3mLExlQCF72M+mNuw==",
+      "dependencies": [
+        "hono",
+        "zod"
+      ]
+    },
     "@mongodb-js/saslprep@1.5.4": {
       "integrity": "sha512-05UC0jQsjKAOuXQ0H9Ud9vUTJpZIg+n/FinpR30tI5I8pY2inTfPOZ5OF/cg3Ce/N9MoD1xhRCeOsJtuTbFYlw==",
       "dependencies": [
@@ -190,15 +199,20 @@
         "tr46",
         "webidl-conversions"
       ]
+    },
+    "zod@4.6.5": {
+      "integrity": "sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q=="
     }
   },
   "workspace": {
     "dependencies": [
       "jsr:@std/assert@^1.0.19",
       "jsr:@std/log@~0.224.14",
+      "npm:@hono/zod-validator@~0.9.1",
       "npm:bcryptjs@^3.0.3",
       "npm:hono@^4.13.9",
-      "npm:mongoose@^9.10.2"
+      "npm:mongoose@^9.10.2",
+      "npm:zod@^4.6.5"
     ]
   }
 }

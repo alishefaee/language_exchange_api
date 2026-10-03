@@ -6,6 +6,8 @@ import * as authController from "./controllers/auth.ts"
 import * as userController from "./controllers/users.ts"
 import * as conversationController from "./controllers/conversations.ts"
 import * as messageController from "./controllers/messages.ts"
+import { loginSchema, registerSchema, tokenSchema } from "./validator/auth_validator.ts"
+import { validate } from "./validator/validators.ts"
 
 const app = new Hono()
 
@@ -20,8 +22,10 @@ app.use(logger((message, ...rest) => {
 const router = new Hono()
 
 // Auth Routes
-router.post("/auth/register", authController.register)
-router.post("/auth/login", authController.login)
+router.post("/auth/register", validate("json", registerSchema), authController.register)
+router.post("/auth/login", validate("json", loginSchema), authController.login)
+router.post("/auth/refresh", validate("json", tokenSchema), authController.refresh)
+router.post("/auth/logout", validate("json", tokenSchema), authController.logout)
 
 // User Routes
 router.get("/users/state", userController.getOnboardingState)

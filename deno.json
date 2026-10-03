@@ -18,11 +18,13 @@
   },
 
   "imports": {
+    "@hono/zod-validator": "npm:@hono/zod-validator@^0.9.1",
     "@std/assert": "jsr:@std/assert@^1.0.19",
     "@std/log": "jsr:@std/log@^0.224.14",
     "bcryptjs": "npm:bcryptjs@^3.0.3",
     "hono": "npm:hono@^4.13.9",
-    "mongoose": "npm:mongoose@^9.10.2"
+    "mongoose": "npm:mongoose@^9.10.2",
+    "zod": "npm:zod@^4.6.5"
   },
 
   "fmt": {
