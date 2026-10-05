@@ -31,6 +31,7 @@ export const TokenService = {
       sub: userId,
       iat: now,
       exp: now + ACCESS_TOKEN_EXPIRATION_SEC,
+      jti: crypto.randomUUID(),
     }
 
     return sign(payload, JWT_SECRET)
@@ -50,7 +51,7 @@ export const TokenService = {
    */
   verifyAccessToken: async (token: string): Promise<any | null> => {
     try {
-      const decodedPayload = await verify(token, JWT_SECRET)
+      const decodedPayload = await verify(token, JWT_SECRET, "HS256")
       return decodedPayload
     } catch (_error) {
       // Catch SignatureKeyNotFound, JwtTokenInvalid, JwtTokenExpired, etc.
