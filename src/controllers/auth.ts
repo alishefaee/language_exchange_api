@@ -1,5 +1,5 @@
 import type { Context } from "hono"
-import { UserService } from "../services/user_service.ts"
+import { UserService } from "../services/auth_service.ts"
 import { TokenService, verifyPassword } from "../helpers/security_helper.ts"
 import { reply } from "../helpers/api_resp.ts"
 import { getLogger } from "@std/log"
