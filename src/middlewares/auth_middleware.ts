@@ -17,6 +17,10 @@ export const requireAuth = async (c: Context, next: Next) => {
     return reply.error(c, "AUTH_TOKEN_EXPIRED", { message: "Access token expired or invalid" })
   }
 
+  if (!decodedPayload.sub) {
+    return reply.error(c, "UNAUTHORIZED", { message: "Invalid token payload" })
+  }
+
   // Store the payload in Hono's context so controllers can access the userId
   c.set("jwtPayload", decodedPayload)
 

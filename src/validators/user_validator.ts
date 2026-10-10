@@ -14,5 +14,5 @@ export const onboardingProfileSchema = z.object({
   nativeLanguages: z.array(languageLevelSchema).optional(),
   learningLanguages: z.array(languageLevelSchema).optional(),
   bio: z.string().max(300).trim().optional(),
-  avatarUrl: z.string().url().optional(),
+  avatarUrl: z.url().optional(),
 })

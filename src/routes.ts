@@ -6,6 +6,7 @@ import * as messageController from "./controllers/messages.ts"
 import { validate } from "./validators/validator.ts"
 import { loginSchema, registerSchema, tokenSchema } from "./validators/auth_validator.ts"
 import { requireAuth } from "./middlewares/auth_middleware.ts"
+import { onboardingProfileSchema } from "./validators/user_validator.ts"
 
 export const router = new Hono()
 
@@ -21,13 +22,11 @@ protectedRouter.use("*", requireAuth)
 
 protectedRouter.post("/auth/logout", validate("json", tokenSchema), authController.logout)
 
-// User Routes
-protectedRouter.get("/users/state", userController.getOnboardingState)
-protectedRouter.patch("/users/identity", userController.updateIdentity)
-protectedRouter.patch("/users/locations", userController.updateLocations)
-protectedRouter.patch("/users/languages", userController.updateLanguages)
-protectedRouter.post("/users/avatar-upload-url", userController.getAvatarUploadUrl)
-protectedRouter.post("/users/complete", userController.completeOnboarding)
+protectedRouter.post(
+  "/users/onboarding",
+  validate("json", onboardingProfileSchema),
+  userController.completeOnboarding,
+)
 
 // Conversation Routes
 protectedRouter.get("/conversations/", conversationController.getConversations)

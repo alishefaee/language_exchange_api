@@ -18,6 +18,7 @@
   },
 
   "imports": {
+    "@hono/swagger-ui": "npm:@hono/swagger-ui@^0.6.1",
     "@hono/zod-validator": "npm:@hono/zod-validator@^0.9.1",
     "@std/assert": "jsr:@std/assert@^1.0.19",
     "@std/log": "jsr:@std/log@^0.224.14",
