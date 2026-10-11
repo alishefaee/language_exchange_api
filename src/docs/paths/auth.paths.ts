@@ -1,3 +1,4 @@
+import { loginSchema } from "../schemas/auth/login.schema.ts"
 import { registerSchema } from "../schemas/auth/register.schema.ts"
 
 export const authPaths = {
@@ -66,8 +67,22 @@ export const authPaths = {
         },
       },
       responses: {
-        "200": { description: "Successful login" },
-        "401": { description: "Invalid credentials" },
+        "200": {
+          description: "Successful login",
+          content: {
+            "application/json": {
+              schema: loginSchema.authLoginSuccess,
+            },
+          },
+        },
+        "401": {
+          description: "Invalid credentials",
+          content: {
+            "application/json": {
+              schema: loginSchema.authLogin401,
+            },
+          },
+        },
       },
     },
   },
