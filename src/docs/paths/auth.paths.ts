@@ -1,3 +1,5 @@
+import { registerSchema } from "../schemas/auth/register.schema.ts"
+
 export const authPaths = {
   "/api/v1/auth/register": {
     post: {
@@ -29,7 +31,7 @@ export const authPaths = {
           description: "User successfully created",
           content: {
             "application/json": {
-              schema: { $ref: "#/components/schemas/registerSchema/authRegisterSuccess" },
+              schema: registerSchema.authRegisterSuccess,
             },
           },
         },
@@ -37,7 +39,7 @@ export const authPaths = {
           description: "Validation failed or email already taken",
           content: {
             "application/json": {
-              schema: { $ref: "#/components/schemas/registerSchema/authRegister400" },
+              schema: registerSchema.authRegister400,
             },
           },
         },
@@ -53,7 +55,7 @@ export const authPaths = {
         content: {
           "application/json": {
             schema: {
-              type: "object",
+              stype: "object",
               required: ["email", "password"],
               properties: {
                 email: { type: "string", format: "email" },

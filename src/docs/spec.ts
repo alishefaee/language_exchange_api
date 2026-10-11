@@ -1,6 +1,6 @@
+// pages
 import { authPaths } from "./paths/auth.paths.ts"
-import { commonSchemas } from "./schemas/common.ts"
-import { registerSchema } from "./schemas/auth/register.schema.ts"
+import { userPaths } from "./paths/user.paths.ts"
 
 export const openApiSpec = {
   openapi: "3.0.0",
@@ -23,17 +23,14 @@ export const openApiSpec = {
         bearerFormat: "JWT",
       },
     },
-    schemas: {
-      ...commonSchemas,
-      ...registerSchema,
-    },
+    schemas: {},
   },
   security: [
     { BearerAuth: [] },
   ],
   paths: {
     ...authPaths,
-    // ...userPaths,
+    ...userPaths,
     // ...conversationPaths
   },
 }
