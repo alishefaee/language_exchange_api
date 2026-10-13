@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    container_name: lang_app_api
+    ports:
+      - "8000:8000" # Exposes the Hono API to the EC2 public IP
+    environment:
+      # Use the service names instead of localhost
+      - MONGODB_URI=mongodb://mongodb:27017/lang_app
+      - MONGODB_URI_TEST=mongodb://mongodb_test:27017/lang_app_test
+      # Add other env vars here (e.g., JWT_SECRET)
+    depends_on:
+      - mongodb
+      - mongodb_test
+    restart: unless-stopped
+
+  mongodb:
+    image: mongo:latest
+    container_name: lang_app_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+
+  mongodb_test:
+    image: mongo:latest
+    container_name: lang_app_db_test
+    ports:
+      - "27018:27017" # Mapped to 27018 on the host to prevent port collision
+    volumes:
+      - mongodb_test_data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
+  mongodb_test_data:
