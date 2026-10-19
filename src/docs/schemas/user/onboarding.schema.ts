@@ -1,15 +1,17 @@
-export const onboardingSchema = {
-  LanguageLevel: {
-    type: "object",
-    properties: {
-      languageCode: { type: "string", minLength: 2, maxLength: 3, example: "en" },
-      proficiency: {
-        type: "string",
-        enum: ["beginner", "intermediate", "advanced", "fluent", "native"],
-        example: "native",
-      },
+const LanguageLevel = {
+  type: "object",
+  properties: {
+    languageCode: { type: "string", minLength: 2, maxLength: 3, example: "en" },
+    proficiency: {
+      type: "string",
+      enum: ["beginner", "intermediate", "advanced", "fluent", "native"],
+      example: "native",
     },
   },
+}
+
+export const onboardingSchema = {
+  LanguageLevel,
   OnboardingRequest: {
     type: "object",
     properties: {
@@ -24,11 +26,11 @@ export const onboardingSchema = {
       countryOfResidence: { type: "string", minLength: 2, maxLength: 3, example: "DE" },
       nativeLanguages: {
         type: "array",
-        items: { $ref: "#/components/schemas/LanguageLevel" },
+        items: LanguageLevel,
       },
       learningLanguages: {
         type: "array",
-        items: { $ref: "#/components/schemas/LanguageLevel" },
+        items: LanguageLevel,
       },
       bio: { type: "string", maxLength: 300, example: "Looking for German native speakers!" },
       avatarUrl: { type: "string", format: "uri", example: "https://example.com/avatar.jpg" },

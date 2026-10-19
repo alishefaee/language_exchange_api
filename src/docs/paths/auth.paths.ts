@@ -1,6 +1,7 @@
 import { loginSchema } from "../schemas/auth/login.schema.ts"
 import { logoutSchema } from "../schemas/auth/logout.schema.ts"
 import { registerSchema } from "../schemas/auth/register.schema.ts"
+import { refreshSchema } from "../schemas/auth/refresh.schema.ts"
 
 export const authPaths = {
   "/api/v1/auth/register": {
@@ -141,6 +142,68 @@ export const authPaths = {
           content: {
             "application/json": {
               schema: logoutSchema.authLogout500,
+            },
+          },
+        },
+      },
+    },
+  },
+  "/api/v1/auth/refresh": {
+    post: {
+      tags: ["Authentication"],
+      summary: "Refresh access and refresh tokens",
+      description:
+        "Validates the current refresh token, revokes it (token rotation), and issues a new access and refresh token pair.",
+      security: [],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              required: ["refresh_token"],
+              properties: {
+                refresh_token: {
+                  type: "string",
+                  format: "uuid",
+                  minLength: 1,
+                  example: "91e30838-62b4-4957-b6ba-e5dcb0d9a3d0",
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        "200": {
+          description: "Tokens successfully rotated and re-issued",
+          content: {
+            "application/json": {
+              schema: refreshSchema.authRefreshSuccess,
+            },
+          },
+        },
+        "400": {
+          description: "Validation failed (missing or empty refresh token)",
+          content: {
+            "application/json": {
+              schema: refreshSchema.authRefresh400,
+            },
+          },
+        },
+        "401": {
+          description: "Refresh token is missing from database, revoked, or expired",
+          content: {
+            "application/json": {
+              schema: refreshSchema.authRefresh401,
+            },
+          },
+        },
+        "500": {
+          description: "Internal server error",
+          content: {
+            "application/json": {
+              schema: refreshSchema.authRefresh500,
             },
           },
         },
