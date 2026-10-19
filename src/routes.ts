@@ -7,6 +7,12 @@ import { validate } from "./validators/validator.ts"
 import { loginSchema, registerSchema, tokenSchema } from "./validators/auth_validator.ts"
 import { requireAuth } from "./middlewares/auth_middleware.ts"
 import { onboardingProfileSchema } from "./validators/user_validator.ts"
+import * as searchController from "./controllers/search.ts"
+import {
+  createSavedSearchSchema,
+  executeSearchQuerySchema,
+  updateSavedSearchSchema,
+} from "./validators/search_validator.ts"
 
 export const router = new Hono()
 
@@ -27,6 +33,27 @@ protectedRouter.post(
   validate("json", onboardingProfileSchema),
   userController.completeOnboarding,
 )
+
+// Search
+protectedRouter.get(
+  "/search/users",
+  validate("query", executeSearchQuerySchema),
+  searchController.searchUsers,
+)
+
+// Saved Search Presets CRUD
+protectedRouter.get("/search/presets", searchController.getSavedSearches)
+protectedRouter.post(
+  "/search/presets",
+  validate("json", createSavedSearchSchema),
+  searchController.createSavedSearch,
+)
+protectedRouter.patch(
+  "/search/presets/:id",
+  validate("json", updateSavedSearchSchema),
+  searchController.updateSavedSearch,
+)
+protectedRouter.delete("/search/presets/:id", searchController.deleteSavedSearch)
 
 // Conversation Routes
 protectedRouter.get("/conversations/", conversationController.getConversations)

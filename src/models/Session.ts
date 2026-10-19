@@ -17,7 +17,10 @@ export const SessionSchema = new Schema<ISession>(
     // TTL Index: MongoDB automatically removes the document when expiresAt is reached
     expiresAt: { type: Date, required: true, index: { expires: "0s" } },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    toJSON: { versionKey: false },
+  },
 )
 
 export const Session: Model<ISession> = mongoose.model<ISession>("Session", SessionSchema)

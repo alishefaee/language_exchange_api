@@ -12,7 +12,6 @@ export interface IUser extends Document {
   bio?: string
   avatarUrl?: string
 
-  // Demographics (Optional at initial registration)
   dateOfBirth?: Date
   age?: number
   gender?: "male" | "female" | "non-binary" | "other" | "prefer_not_to_say"
@@ -55,7 +54,6 @@ export const UserSchema = new Schema<IUser>(
     bio: { type: String, maxlength: 300, default: "" },
     avatarUrl: { type: String, default: null },
 
-    // Removed 'required: true' to allow progressive multi-step onboarding
     dateOfBirth: { type: Date, index: true },
     gender: {
       type: String,
@@ -81,7 +79,7 @@ export const UserSchema = new Schema<IUser>(
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true },
+    toJSON: { virtuals: true, versionKey: false },
     toObject: { virtuals: true },
   },
 )

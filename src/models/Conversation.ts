@@ -18,7 +18,10 @@ export const ConversationSchema = new Schema<IConversation>(
     lastMessageAt: { type: Date, default: Date.now, index: true },
     hiddenFor: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    toJSON: { versionKey: false },
+  },
 )
 
 ConversationSchema.index({ participants: 1 })

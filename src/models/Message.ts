@@ -19,7 +19,10 @@ export const MessageSchema = new Schema<IMessage>(
     sender: { type: Schema.Types.ObjectId, ref: "User", required: true },
     text: { type: String, required: true, maxlength: 2000, trim: true },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    toJSON: { versionKey: false },
+  },
 )
 
 MessageSchema.index({ conversationId: 1, createdAt: -1 })

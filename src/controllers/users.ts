@@ -9,7 +9,8 @@ const logger = getLogger()
 export const completeOnboarding = async (c: Context<AppEnv>) => {
   try {
     const userId = c.get("jwtPayload").sub
-    const payload = c.req.json()
+    const payload = await c.req.json()
+    console.log(payload)
 
     const updatedUser = await UserService.completeProfile(userId, payload)
 
