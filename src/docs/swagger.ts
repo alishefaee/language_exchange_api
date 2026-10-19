@@ -10,4 +10,10 @@ swaggerRouter.get("/openapi.json", (c) => {
 })
 
 // Serve the interactive Swagger UI interface
-swaggerRouter.get("/ui", swaggerUI({ url: "/docs/openapi.json" }))
+swaggerRouter.get(
+  "/ui",
+  swaggerUI({
+    url: "/docs/openapi.json",
+    title: "Language Partner API - Swagger UI",
+  }),
+)

@@ -1,5 +1,7 @@
 // src/docs/paths/search.paths.ts
-import { searchSchemas } from "../schemas/search/search.schemas.ts"
+import { searchUsersSchemas } from "../schemas/search/search-users.schemas.ts"
+import { searchPresetsSchemas } from "../schemas/search/search-presets.schemas.ts"
+import { searchPresetByIdSchemas } from "../schemas/search/search-preset-by-id.schemas.ts"
 
 export const searchPaths = {
   "/api/v1/search/users": {
@@ -89,7 +91,7 @@ export const searchPaths = {
           description: "Paginated list of matching users",
           content: {
             "application/json": {
-              schema: searchSchemas.SearchUsersResponse200,
+              schema: searchUsersSchemas.Response200,
             },
           },
         },
@@ -97,7 +99,7 @@ export const searchPaths = {
           description: "Validation failed on query parameters",
           content: {
             "application/json": {
-              schema: searchSchemas.SearchResponse400,
+              schema: searchUsersSchemas.Response400,
             },
           },
         },
@@ -105,7 +107,7 @@ export const searchPaths = {
           description: "Unauthorized - Missing or invalid Bearer token",
           content: {
             "application/json": {
-              schema: searchSchemas.SearchResponse401,
+              schema: searchUsersSchemas.Response401,
             },
           },
         },
@@ -113,7 +115,7 @@ export const searchPaths = {
           description: "Internal server error",
           content: {
             "application/json": {
-              schema: searchSchemas.SearchResponse500,
+              schema: searchUsersSchemas.Response500,
             },
           },
         },
@@ -132,7 +134,7 @@ export const searchPaths = {
           description: "List of saved search presets",
           content: {
             "application/json": {
-              schema: searchSchemas.SavedSearchListResponse200,
+              schema: searchPresetsSchemas.ListResponse200,
             },
           },
         },
@@ -140,7 +142,7 @@ export const searchPaths = {
           description: "Unauthorized - Missing or invalid Bearer token",
           content: {
             "application/json": {
-              schema: searchSchemas.SearchResponse401,
+              schema: searchPresetsSchemas.Response401,
             },
           },
         },
@@ -148,7 +150,7 @@ export const searchPaths = {
           description: "Internal server error",
           content: {
             "application/json": {
-              schema: searchSchemas.SearchResponse500,
+              schema: searchPresetsSchemas.Response500,
             },
           },
         },
@@ -164,7 +166,7 @@ export const searchPaths = {
         required: true,
         content: {
           "application/json": {
-            schema: searchSchemas.CreateSavedSearchRequest,
+            schema: searchPresetsSchemas.CreateRequest,
           },
         },
       },
@@ -173,7 +175,7 @@ export const searchPaths = {
           description: "Search preset created successfully",
           content: {
             "application/json": {
-              schema: searchSchemas.SavedSearchResponse201,
+              schema: searchPresetsSchemas.CreateResponse201,
             },
           },
         },
@@ -181,7 +183,7 @@ export const searchPaths = {
           description: "Validation failed",
           content: {
             "application/json": {
-              schema: searchSchemas.SearchResponse400,
+              schema: searchPresetsSchemas.Response400,
             },
           },
         },
@@ -189,7 +191,7 @@ export const searchPaths = {
           description: "Unauthorized - Missing or invalid Bearer token",
           content: {
             "application/json": {
-              schema: searchSchemas.SearchResponse401,
+              schema: searchPresetsSchemas.Response401,
             },
           },
         },
@@ -197,7 +199,7 @@ export const searchPaths = {
           description: "Internal server error",
           content: {
             "application/json": {
-              schema: searchSchemas.SearchResponse500,
+              schema: searchPresetsSchemas.Response500,
             },
           },
         },
@@ -225,7 +227,7 @@ export const searchPaths = {
         required: true,
         content: {
           "application/json": {
-            schema: searchSchemas.UpdateSavedSearchRequest,
+            schema: searchPresetByIdSchemas.UpdateRequest,
           },
         },
       },
@@ -234,7 +236,7 @@ export const searchPaths = {
           description: "Saved search updated successfully",
           content: {
             "application/json": {
-              schema: searchSchemas.SavedSearchResponse200,
+              schema: searchPresetByIdSchemas.UpdateResponse200,
             },
           },
         },
@@ -242,7 +244,7 @@ export const searchPaths = {
           description: "Validation failed",
           content: {
             "application/json": {
-              schema: searchSchemas.SearchResponse400,
+              schema: searchPresetByIdSchemas.Response400,
             },
           },
         },
@@ -250,7 +252,7 @@ export const searchPaths = {
           description: "Unauthorized - Missing or invalid Bearer token",
           content: {
             "application/json": {
-              schema: searchSchemas.SearchResponse401,
+              schema: searchPresetByIdSchemas.Response401,
             },
           },
         },
@@ -258,7 +260,7 @@ export const searchPaths = {
           description: "Saved search preset not found",
           content: {
             "application/json": {
-              schema: searchSchemas.SearchResponse404,
+              schema: searchPresetByIdSchemas.Response404,
             },
           },
         },
@@ -266,7 +268,7 @@ export const searchPaths = {
           description: "Internal server error",
           content: {
             "application/json": {
-              schema: searchSchemas.SearchResponse500,
+              schema: searchPresetByIdSchemas.Response500,
             },
           },
         },
@@ -293,7 +295,7 @@ export const searchPaths = {
           description: "Saved search deleted successfully",
           content: {
             "application/json": {
-              schema: searchSchemas.DeleteSavedSearchResponse200,
+              schema: searchPresetByIdSchemas.DeleteResponse200,
             },
           },
         },
@@ -301,7 +303,7 @@ export const searchPaths = {
           description: "Unauthorized - Missing or invalid Bearer token",
           content: {
             "application/json": {
-              schema: searchSchemas.SearchResponse401,
+              schema: searchPresetByIdSchemas.Response401,
             },
           },
         },
@@ -309,7 +311,7 @@ export const searchPaths = {
           description: "Saved search preset not found",
           content: {
             "application/json": {
-              schema: searchSchemas.SearchResponse404,
+              schema: searchPresetByIdSchemas.Response404,
             },
           },
         },
@@ -317,7 +319,7 @@ export const searchPaths = {
           description: "Internal server error",
           content: {
             "application/json": {
-              schema: searchSchemas.SearchResponse500,
+              schema: searchPresetByIdSchemas.Response500,
             },
           },
         },

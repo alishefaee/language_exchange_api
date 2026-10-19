@@ -1,6 +1,4 @@
 import { authPaths } from "./paths/auth.paths.ts"
-import { commonSchemas } from "./schemas/common.ts"
-import { registerSchema } from "./schemas/auth/register.schema.ts"
 import { userPaths } from "./paths/user.paths.ts"
 import { searchPaths } from "./paths/search.paths.ts"
 
@@ -26,8 +24,7 @@ export const openApiSpec = {
       },
     },
     schemas: {
-      ...commonSchemas,
-      ...registerSchema,
+
     },
   },
   security: [
