@@ -1,6 +1,8 @@
 import { authPaths } from "./paths/auth.paths.ts"
 import { userPaths } from "./paths/user.paths.ts"
 import { searchPaths } from "./paths/search.paths.ts"
+import { conversationPaths } from "./paths/conversations.paths.ts"
+import { messagePaths } from "./paths/messages.paths.ts"
 
 export const openApiSpec = {
   openapi: "3.0.0",
@@ -23,9 +25,7 @@ export const openApiSpec = {
         bearerFormat: "JWT",
       },
     },
-    schemas: {
-
-    },
+    schemas: {},
   },
   security: [
     { BearerAuth: [] },
@@ -34,6 +34,7 @@ export const openApiSpec = {
     ...authPaths,
     ...userPaths,
     ...searchPaths,
-    // ...conversationPaths
+    ...conversationPaths,
+    ...messagePaths,
   },
 }
