@@ -100,3 +100,14 @@ protectedRouter.delete(
 
 // Mount protected routes to the main router
 router.route("/", protectedRouter)
+
+// admin apis
+// todo: block a user
+// todo: like/dislike a user
+// todo: delete my account
+// disable account by admin
+// delete conversation either for you or for both sides
+// OWASP, rate limit, SQL sanitize, CORS
+// serve frontend
+// gracefull shutdown
+// concurrency and __v field check
