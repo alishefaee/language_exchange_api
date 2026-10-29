@@ -2,7 +2,7 @@ import mongoose, { type Document, type Model, Schema } from "mongoose"
 
 export interface IConversation extends Document {
   participants: mongoose.Types.ObjectId[]
-  lastMessage?: mongoose.Types.ObjectId
+  lastMessage?: mongoose.Types.ObjectId | undefined
   lastMessageAt: Date
   hiddenFor: mongoose.Types.ObjectId[] // Allows a user to clear chat history without affecting the other
   createdAt: Date
@@ -23,8 +23,6 @@ export const ConversationSchema = new Schema<IConversation>(
     toJSON: { versionKey: false },
   },
 )
-
-ConversationSchema.index({ participants: 1 })
 
 export const Conversation: Model<IConversation> = mongoose.model<IConversation>(
   "Conversation",

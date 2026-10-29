@@ -13,6 +13,13 @@ import {
   executeSearchQuerySchema,
   updateSavedSearchSchema,
 } from "./validators/search_validator.ts"
+import {
+  createConversationSchema,
+  getConversationsQuerySchema,
+  getMessagesQuerySchema,
+  idParamSchema,
+  sendMessageSchema,
+} from "./validators/conversation_validator.ts"
 
 export const router = new Hono()
 
@@ -56,14 +63,51 @@ protectedRouter.patch(
 protectedRouter.delete("/search/presets/:id", searchController.deleteSavedSearch)
 
 // Conversation Routes
-protectedRouter.get("/conversations/", conversationController.getConversations)
-protectedRouter.post("/conversations/", conversationController.createConversation)
-protectedRouter.delete("/conversations/:id", conversationController.deleteConversation)
-protectedRouter.get("/conversations/:id/messages", conversationController.getConversationMessages)
-protectedRouter.post("/conversations/:id/messages", conversationController.sendConversationMessage)
+protectedRouter.get(
+  "/conversations/",
+  validate("query", getConversationsQuerySchema),
+  conversationController.getConversations,
+)
+protectedRouter.post(
+  "/conversations/",
+  validate("json", createConversationSchema),
+  conversationController.createConversation,
+)
+protectedRouter.delete(
+  "/conversations/:id",
+  validate("param", idParamSchema),
+  conversationController.deleteConversation,
+)
+protectedRouter.get(
+  "/conversations/:id/messages",
+  validate("param", idParamSchema),
+  validate("query", getMessagesQuerySchema),
+  conversationController.getConversationMessages,
+)
+protectedRouter.post(
+  "/conversations/:id/messages",
+  validate("param", idParamSchema),
+  validate("json", sendMessageSchema),
+  conversationController.sendConversationMessage,
+)
 
 // Message Routes
-protectedRouter.delete("/messages/:id", messageController.deleteMessage)
+protectedRouter.delete(
+  "/messages/:id",
+  validate("param", idParamSchema),
+  messageController.deleteMessage,
+)
 
 // Mount protected routes to the main router
 router.route("/", protectedRouter)
+
+// admin apis
+// todo: block a user
+// todo: like/dislike a user
+// todo: delete my account
+// disable account by admin
+// delete conversation either for you or for both sides
+// OWASP, rate limit, SQL sanitize, CORS
+// serve frontend
+// gracefull shutdown
+// concurrency and __v field check
