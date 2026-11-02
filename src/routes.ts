@@ -1,4 +1,5 @@
 import { Hono } from "hono"
+import { serveStatic } from "hono/deno"
 import * as authController from "./controllers/auth.ts"
 import * as userController from "./controllers/users.ts"
 import * as conversationController from "./controllers/conversations.ts"
@@ -6,7 +7,7 @@ import * as messageController from "./controllers/messages.ts"
 import { validate } from "./validators/validator.ts"
 import { loginSchema, registerSchema, tokenSchema } from "./validators/auth_validator.ts"
 import { requireAuth } from "./middlewares/auth_middleware.ts"
-import { onboardingProfileSchema } from "./validators/user_validator.ts"
+import { onboardingProfileSchema, uploadAvatarSchema } from "./validators/user_validator.ts"
 import * as searchController from "./controllers/search.ts"
 import {
   createSavedSearchSchema,
@@ -23,6 +24,11 @@ import {
 
 export const router = new Hono()
 
+
+
+// Serve uploaded avatars statically (add to your main router or app.ts)
+router.use("/uploads/*", serveStatic({ root: "./" }))
+
 // --- Public Routes ---
 router.post("/auth/register", validate("json", registerSchema), authController.register)
 router.post("/auth/login", validate("json", loginSchema), authController.login)
@@ -34,6 +40,18 @@ const protectedRouter = new Hono()
 protectedRouter.use("*", requireAuth)
 
 protectedRouter.post("/auth/logout", validate("json", tokenSchema), authController.logout)
+
+protectedRouter.post(
+  "/users/onboarding",
+  validate("json", onboardingProfileSchema),
+  userController.completeOnboarding,
+)
+
+protectedRouter.post(
+  "/users/avatar",
+  validate("form", uploadAvatarSchema),
+  userController.uploadAvatar,
+)
 
 protectedRouter.post(
   "/users/onboarding",

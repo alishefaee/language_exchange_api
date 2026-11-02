@@ -20,4 +20,23 @@ export class UserService {
 
     return updatedUser
   }
+
+  static async updateAvatar(userId: string, avatarUrl: string) {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          avatarUrl,
+          lastUpdatedProfile: new Date(),
+        },
+      },
+      { new: true, runValidators: true },
+    )
+
+    if (!updatedUser) {
+      throw new Error("USER_NOT_FOUND")
+    }
+
+    return updatedUser
+  }
 }
