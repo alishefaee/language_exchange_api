@@ -1,7 +1,7 @@
 {
 "tasks": {
-    "dev": "deno run --watch --env-file=.env.local --allow-env --allow-net --allow-read --allow-write --allow-sys src/main.ts",
-    "start": "deno run --env-file=.env --allow-env --allow-net --allow-read --allow-write --allow-sys src/main.ts",
+    "dev": "deno run --watch --env-file=.env.local --allow-env --allow-net --allow-read --allow-write --allow-sys --allow-ffi src/main.ts",
+    "start": "deno run --env-file=.env --allow-env --allow-net --allow-read --allow-write --allow-sys --allow-ffi src/main.ts",
 
     "prepare": "git config core.hooksPath .githooks",
     "check": "deno check src/main.ts",
@@ -10,11 +10,11 @@
     "fmt": "deno fmt",
     "fmt:check": "deno fmt --check",
 
-    "test:local": "deno test --env-file=.env.local --allow-env --allow-net --allow-read --allow-write --allow-sys",
-    "test:watch": "deno test --watch --env-file=.env.local --allow-env --allow-net --allow-read --allow-write --allow-sys",
+    "test:local": "deno test --env-file=.env.local --allow-env --allow-net --allow-read --allow-write --allow-sys --allow-ffi",
+    "test:watch": "deno test --watch --env-file=.env.local --allow-env --allow-net --allow-read --allow-write --allow-sys --allow-ffi",
     "test:coverage": "deno test --coverage=coverage --env-file=.env.local --allow-env --allow-net --allow-read --allow-write --allow-sys && deno coverage coverage",
 
-    "test:prod": "deno test --env-file=.env --allow-env --allow-net --allow-read --allow-write --allow-sys",
+    "test:prod": "deno test --env-file=.env --allow-env --allow-net --allow-read --allow-write --allow-sys --allow-ffi",
 
     "audit": "deno task check && deno task lint && deno task fmt:check && deno task test:local"
   },
@@ -27,6 +27,7 @@
     "bcryptjs": "npm:bcryptjs@^3.0.3",
     "hono": "npm:hono@^4.13.9",
     "mongoose": "npm:mongoose@^9.10.2",
+    "sharp": "npm:sharp@^0.35.5",
     "zod": "npm:zod@^4.6.5"
   },
 
