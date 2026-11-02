@@ -9,23 +9,22 @@ const logger = getLogger()
 
 export const completeOnboarding = async (c: Context<AppEnv>) => {
   try {
-    const userId = c.get("jwtPayload").sub
-    const payload = await c.req.json()
-    console.log(payload)
+    const userId = c.get("jwtPayload")?.sub
+    if (!userId) {
+      return reply.error(c, "UNAUTHORIZED")
+    }
 
+    const payload = await c.req.json()
     const updatedUser = await UserService.completeProfile(userId, payload)
 
     return reply.success(c, "OK", {
-      user: {
-        id: updatedUser.id,
-        email: updatedUser.email,
-        username: updatedUser.username,
-        onboardingStep: updatedUser.onboardingStep,
-      },
+      user: updatedUser, // Returns all user fields with `_id`, omitting `passwordHash` and `__v`
     })
   } catch (error: any) {
     if (error.message === "USER_NOT_FOUND") {
-      return reply.error(c, "RESOURCE_NOT_FOUND", { message: "User account no longer exists." })
+      return reply.error(c, "RESOURCE_NOT_FOUND", {
+        message: "User account no longer exists.",
+      })
     }
 
     logger.error(`Complete Onboarding Error: ${error.message}`)

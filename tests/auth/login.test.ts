@@ -13,7 +13,7 @@ Deno.test({
       password: "securepassword123",
     }
 
-    // Seed user for login tests
+    // Seed user via register endpoint
     await app.request(
       new Request("http://localhost/api/v1/auth/register", {
         method: "POST",
@@ -55,6 +55,8 @@ Deno.test({
 
       assertEquals(res.status, ApiStatus.AUTH_USER_NOT_FOUND.httpCode)
       assertFalse(payload.success)
+      assertEquals(payload.code, ApiStatus.AUTH_USER_NOT_FOUND.code)
+      assertEquals(payload.message, "AUTH_USER_NOT_FOUND")
     })
 
     await t.step("POST /api/v1/auth/login - Successfully logs in", async () => {
@@ -69,8 +71,10 @@ Deno.test({
 
       assertEquals(res.status, ApiStatus.OK.httpCode)
       assertEquals(payload.success, true)
+      assertEquals(payload.code, ApiStatus.OK.code)
       assertExists(payload.data.access_token)
       assertExists(payload.data.refresh_token)
+      assertEquals(payload.data.user.email, testUser.email)
     })
 
     await teardownTestDB()

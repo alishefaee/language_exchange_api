@@ -21,7 +21,7 @@ export class ConversationService {
         .sort({ lastMessageAt: -1 })
         .skip(skip)
         .limit(limit)
-        .populate("participants", "username avatarUrl lastLogin")
+        .populate("participants")
         .populate("lastMessage", "text sender createdAt"),
       Conversation.countDocuments(query),
     ])

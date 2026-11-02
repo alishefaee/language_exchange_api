@@ -6,12 +6,14 @@ export interface ILanguageLevel {
 }
 
 export interface IUser extends Document {
+  _id: mongoose.Types.ObjectId
   username: string
   email: string
   passwordHash: string
   bio?: string
   avatarUrl?: string
 
+  // Demographics
   dateOfBirth?: Date
   age?: number
   gender?: "male" | "female" | "non-binary" | "other" | "prefer_not_to_say"
@@ -68,7 +70,7 @@ export const UserSchema = new Schema<IUser>(
     learningLanguages: { type: [LanguageLevelSchema], default: [] },
 
     lastLogin: { type: Date, default: Date.now, index: true },
-    lastUpdatedProfile: { type: Date, index: true }, // Undefined for incomplete profiles
+    lastUpdatedProfile: { type: Date, index: true },
     onboardingStep: {
       type: String,
       enum: ["identity", "locations", "languages", "avatar", "completed"],
@@ -79,8 +81,18 @@ export const UserSchema = new Schema<IUser>(
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true, versionKey: false },
-    toObject: { virtuals: true },
+    id: false, // Prevents Mongoose from creating a duplicate virtual `id` field
+    toObject: {
+      virtuals: true,
+    },
+    toJSON: {
+      virtuals: true, // Keeps the `age` virtual in HTTP responses
+      versionKey: false, // Removes `__v` from HTTP responses
+      transform: (_doc, ret) => {
+        delete (ret as Partial<IUser>).passwordHash // Removes `passwordHash` from HTTP responses
+        return ret
+      },
+    },
   },
 )
 

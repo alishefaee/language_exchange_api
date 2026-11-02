@@ -1,4 +1,5 @@
-// src/docs/schemas/search/search-users.schemas.ts
+// Inside src/docs/schemas/search/search-users.schemas.ts:
+import { UserResponseItem } from "../common.ts"
 
 const LanguageLevel = {
   type: "object",
@@ -18,7 +19,12 @@ const SearchedUserItem = {
     _id: { type: "string", example: "6aca2c9a423540e305ec9244" },
     username: { type: "string", example: "user91879756" },
     bio: { type: "string", example: "Love music, travel, and learning languages over coffee!" },
-    avatarUrl: { type: "string", format: "uri", nullable: true, example: "https://example.com/avatar.jpg" },
+    avatarUrl: {
+      type: "string",
+      format: "uri",
+      nullable: true,
+      example: "https://example.com/avatar.jpg",
+    },
     dateOfBirth: { type: "string", format: "date-time", example: "1998-05-14T00:00:00.000Z" },
     age: { type: "integer", example: 28 },
     gender: {
@@ -32,13 +38,17 @@ const SearchedUserItem = {
     nativeLanguages: { type: "array", items: LanguageLevel },
     learningLanguages: { type: "array", items: LanguageLevel },
     lastLogin: { type: "string", format: "date-time", example: "2026-10-18T11:30:00.000Z" },
-    lastUpdatedProfile: { type: "string", format: "date-time", example: "2026-10-15T09:15:00.000Z" },
+    lastUpdatedProfile: {
+      type: "string",
+      format: "date-time",
+      example: "2026-10-15T09:15:00.000Z",
+    },
     onboardingStep: { type: "string", example: "completed" },
   },
 }
 
 export const searchUsersSchemas = {
-  Response200: {
+  SearchUsersResponse200: {
     type: "object",
     properties: {
       success: { type: "boolean", example: true },
@@ -46,7 +56,10 @@ export const searchUsersSchemas = {
       data: {
         type: "object",
         properties: {
-          users: { type: "array", items: SearchedUserItem },
+          users: {
+            type: "array",
+            items: UserResponseItem, // Full user records with _id, email, blockedUsers, etc.
+          },
           pagination: {
             type: "object",
             properties: {
@@ -71,7 +84,9 @@ export const searchUsersSchemas = {
         additionalProperties: { type: "array", items: { type: "string" } },
         example: {
           minAge: ["Number must be greater than or equal to 13"],
-          gender: ["Invalid enum value. Expected 'male' | 'female' | 'non-binary' | 'other' | 'prefer_not_to_say'"],
+          gender: [
+            "Invalid enum value. Expected 'male' | 'female' | 'non-binary' | 'other' | 'prefer_not_to_say'",
+          ],
         },
       },
     },
@@ -84,7 +99,9 @@ export const searchUsersSchemas = {
       message: { type: "string", example: "UNAUTHORIZED" },
       data: {
         type: "object",
-        properties: { message: { type: "string", example: "Missing or invalid Authorization header" } },
+        properties: {
+          message: { type: "string", example: "Missing or invalid Authorization header" },
+        },
       },
     },
   },
