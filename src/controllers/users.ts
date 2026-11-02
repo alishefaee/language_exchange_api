@@ -3,6 +3,7 @@ import { UserService } from "../services/user_service.ts"
 import { reply } from "../helpers/api_resp.ts"
 import { getLogger } from "@std/log"
 import { AppEnv } from "../types/index.d.ts"
+import { processAvatarImage } from "../helpers/image_processor.ts"
 
 const logger = getLogger()
 
@@ -41,12 +42,14 @@ export const uploadAvatar = async (c: Context<AppEnv>) => {
     const uploadDir = "./uploads/avatars"
     await Deno.mkdir(uploadDir, { recursive: true })
 
-    const ext = file.name.split(".").pop() || "jpg"
-    const fileName = `${userId}_${ crypto.randomUUID() }.${ext}`
+    // Preprocess image (or fast-path if already optimized by client)
+    const rawBuffer = await file.arrayBuffer()
+    const { buffer, ext } = await processAvatarImage(rawBuffer)
+
+    const fileName = `${userId}_${crypto.randomUUID()}.${ext}`
     const filePath = `${uploadDir}/${fileName}`
 
-    const arrayBuffer = await file.arrayBuffer()
-    await Deno.writeFile(filePath, new Uint8Array(arrayBuffer))
+    await Deno.writeFile(filePath, buffer)
 
     const baseUrl = Deno.env.get("API_BASE_URL") || new URL(c.req.url).origin
     const avatarUrl = `${baseUrl}/api/v1/uploads/avatars/${fileName}`
@@ -60,6 +63,9 @@ export const uploadAvatar = async (c: Context<AppEnv>) => {
   } catch (error: any) {
     if (error.message === "USER_NOT_FOUND") {
       return reply.error(c, "RESOURCE_NOT_FOUND", { message: "User account no longer exists." })
+    }
+    if (error.message === "INVALID_IMAGE") {
+      return reply.error(c, "BAD_REQUEST", { message: "Invalid or corrupted image file." })
     }
 
     logger.error(`Upload Avatar Error: ${error.message}`)
