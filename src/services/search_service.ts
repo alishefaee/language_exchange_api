@@ -82,7 +82,6 @@ export class SearchService {
 
     const [users, total] = await Promise.all([
       User.find(query)
-        .select("-passwordHash -blockedUsers -email")
         .sort({ lastLogin: -1 })
         .skip(skip)
         .limit(limit),

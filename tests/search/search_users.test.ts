@@ -99,6 +99,15 @@ Deno.test({
       assertExists(payload.data.users)
       assertEquals(payload.data.users.length, 2)
       assertEquals(payload.data.pagination.total, 2)
+      
+      const firstUser = payload.data.users[0]
+      assertExists(firstUser._id)
+      assertEquals(firstUser.id, undefined)
+      assertEquals(firstUser.passwordHash, undefined)
+      assertEquals(firstUser.__v, undefined)
+      assertExists(firstUser.email)
+      assertExists(firstUser.blockedUsers)
+      assertExists(firstUser.age)
     })
 
     await t.step("GET /api/v1/search/users - Filters by age range and gender", async () => {
@@ -197,19 +206,22 @@ Deno.test({
       },
     )
 
-    await t.step("GET /api/v1/search/users - Fails validation with invalid query parameters", async () => {
-      const req = new Request("http://localhost/api/v1/search/users?minAge=5&gender=invalid", {
-        method: "GET",
-        headers: { Authorization: `Bearer ${accessToken}` },
-      })
+    await t.step(
+      "GET /api/v1/search/users - Fails validation with invalid query parameters",
+      async () => {
+        const req = new Request("http://localhost/api/v1/search/users?minAge=5&gender=invalid", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${accessToken}` },
+        })
 
-      const res = await app.request(req)
-      const payload = await res.json()
+        const res = await app.request(req)
+        const payload = await res.json()
 
-      assertEquals(res.status, ApiStatus.VALIDATION_FAILED.httpCode)
-      assertFalse(payload.success)
-      assertEquals(payload.code, ApiStatus.VALIDATION_FAILED.code)
-    })
+        assertEquals(res.status, ApiStatus.VALIDATION_FAILED.httpCode)
+        assertFalse(payload.success)
+        assertEquals(payload.code, ApiStatus.VALIDATION_FAILED.code)
+      },
+    )
 
     await teardownTestDB()
   },

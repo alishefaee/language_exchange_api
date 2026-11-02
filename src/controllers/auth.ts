@@ -1,5 +1,5 @@
 import type { Context } from "hono"
-import { UserService } from "../services/auth_service.ts"
+import { UserService } from "../services/user_service.ts"
 import { TokenService, verifyPassword } from "../helpers/security_helper.ts"
 import { reply } from "../helpers/api_resp.ts"
 import { getLogger } from "@std/log"
@@ -15,16 +15,12 @@ export const register = async (c: Context) => {
     const user = await UserService.createUser({ email, password })
 
     const deviceId = c.req.header("user-agent")
-    const accessToken = await TokenService.generateAccessToken(user.id)
-    const refreshToken = await UserService.createSession(user.id, deviceId)
+    const accessToken = await TokenService.generateAccessToken(user._id.toString())
+    const refreshToken = await UserService.createSession(user._id.toString(), deviceId)
 
     // The controller formats the pure data into the ApiResponse structure
     return reply.success(c, "CREATED", {
-      user: {
-        id: user.id,
-        email: user.email,
-        onboardingStep: user.onboardingStep,
-      },
+      user, // Automatically serializes all user fields + `_id` + `age`, minus `passwordHash` and `__v`
       access_token: accessToken,
       refresh_token: refreshToken,
       expires_in: 3600,
@@ -61,15 +57,11 @@ export const login = async (c: Context) => {
     }
 
     const deviceId = c.req.header("user-agent")
-    const accessToken = await TokenService.generateAccessToken(user.id)
-    const refreshToken = await UserService.createSession(user.id, deviceId)
+    const accessToken = await TokenService.generateAccessToken(user._id.toString())
+    const refreshToken = await UserService.createSession(user._id.toString(), deviceId)
 
     return reply.success(c, "OK", {
-      user: {
-        id: user.id,
-        email: user.email,
-        onboardingStep: user.onboardingStep,
-      },
+      user, // Full user record without `passwordHash` and `__v`
       access_token: accessToken,
       refresh_token: refreshToken,
       expires_in: 3600,

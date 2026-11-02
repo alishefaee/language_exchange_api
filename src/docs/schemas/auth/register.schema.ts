@@ -1,5 +1,20 @@
+import { UserResponseItem } from "../common.ts"
+
 export const registerSchema = {
-  authRegisterSuccess: {
+  RegisterRequest: {
+    type: "object",
+    required: ["email", "password"],
+    properties: {
+      email: { type: "string", format: "email", example: "user@example.com" },
+      password: {
+        type: "string",
+        format: "password",
+        minLength: 8,
+        example: "securepassword123",
+      },
+    },
+  },
+  RegisterResponse201: {
     type: "object",
     properties: {
       success: { type: "boolean", example: true },
@@ -7,14 +22,7 @@ export const registerSchema = {
       data: {
         type: "object",
         properties: {
-          user: {
-            type: "object",
-            properties: {
-              id: { type: "string", example: "6ac9fd2581460a82416fa4aa" },
-              email: { type: "string", format: "email", example: "user@example.com" },
-              onboardingStep: { type: "string", example: "identity" },
-            },
-          },
+          user: UserResponseItem,
           access_token: {
             type: "string",
             example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2YWM5ZmQy...",
@@ -30,7 +38,7 @@ export const registerSchema = {
       },
     },
   },
-  authRegister400: {
+  RegisterResponse400: {
     type: "object",
     properties: {
       success: { type: "boolean", example: false },

@@ -1,3 +1,35 @@
+// Inside src/docs/schemas/conversations.schemas.ts:
+import { UserResponseItem } from "./common.ts"
+
+const ConversationItem = {
+  type: "object",
+  properties: {
+    _id: { type: "string", example: "6ac9fd2581460a82416fa4cc" },
+    participants: {
+      type: "array",
+      items: UserResponseItem, // Updated from partial participant item to full UserResponseItem
+    },
+    lastMessage: {
+      type: "object",
+      nullable: true,
+      properties: {
+        _id: { type: "string", example: "6ac9fd2581460a82416fa4dd" },
+        text: { type: "string", example: "Hallo! Wie geht es dir?" },
+        sender: { type: "string", example: "6ac9fd2581460a82416fa4aa" },
+        createdAt: { type: "string", format: "date-time", example: "2026-10-18T12:00:00.000Z" },
+      },
+    },
+    lastMessageAt: { type: "string", format: "date-time", example: "2026-10-18T12:00:00.000Z" },
+    hiddenFor: {
+      type: "array",
+      items: { type: "string" },
+      example: [],
+    },
+    createdAt: { type: "string", format: "date-time", example: "2026-10-18T11:50:00.000Z" },
+    updatedAt: { type: "string", format: "date-time", example: "2026-10-18T12:00:00.000Z" },
+  },
+}
+
 const MessageItem = {
   type: "object",
   properties: {

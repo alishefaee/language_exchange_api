@@ -28,7 +28,27 @@ Deno.test({
       assertEquals(payload.code, ApiStatus.CREATED.code)
       assertExists(payload.data.access_token)
       assertExists(payload.data.refresh_token)
-      assertEquals(payload.data.user.email, testUser.email)
+
+      const { user } = payload.data
+      // Standard ID check: only _id is returned, id is omitted
+      assertExists(user._id)
+      assertEquals(user.id, undefined)
+
+      // Stripped fields check
+      assertEquals(user.passwordHash, undefined)
+      assertEquals(user.__v, undefined)
+
+      // Full user record fields check
+      assertEquals(user.email, testUser.email)
+      assertExists(user.username)
+      assertEquals(user.onboardingStep, "identity")
+      assertEquals(user.bio, "")
+      assertEquals(Array.isArray(user.nativeLanguages), true)
+      assertEquals(Array.isArray(user.learningLanguages), true)
+      assertEquals(Array.isArray(user.blockedUsers), true)
+      assertExists(user.lastLogin)
+      assertExists(user.createdAt)
+      assertExists(user.updatedAt)
     })
 
     await t.step("POST /api/v1/auth/register - Fails when email is already taken", async () => {

@@ -1,17 +1,7 @@
-const LanguageLevel = {
-  type: "object",
-  properties: {
-    languageCode: { type: "string", minLength: 2, maxLength: 3, example: "en" },
-    proficiency: {
-      type: "string",
-      enum: ["beginner", "intermediate", "advanced", "fluent", "native"],
-      example: "native",
-    },
-  },
-}
+import { LanguageLevelItem, UserResponseItem } from "../common.ts"
 
 export const onboardingSchema = {
-  LanguageLevel,
+  LanguageLevel: LanguageLevelItem,
   OnboardingRequest: {
     type: "object",
     properties: {
@@ -26,11 +16,11 @@ export const onboardingSchema = {
       countryOfResidence: { type: "string", minLength: 2, maxLength: 3, example: "DE" },
       nativeLanguages: {
         type: "array",
-        items: LanguageLevel,
+        items: LanguageLevelItem,
       },
       learningLanguages: {
         type: "array",
-        items: LanguageLevel,
+        items: LanguageLevelItem,
       },
       bio: { type: "string", maxLength: 300, example: "Looking for German native speakers!" },
       avatarUrl: { type: "string", format: "uri", example: "https://example.com/avatar.jpg" },
@@ -44,15 +34,7 @@ export const onboardingSchema = {
       data: {
         type: "object",
         properties: {
-          user: {
-            type: "object",
-            properties: {
-              id: { type: "string", example: "6aca2c9a423540e305ec9244" },
-              email: { type: "string", format: "email", example: "user1@example.com" },
-              username: { type: "string", example: "user91879756" },
-              onboardingStep: { type: "string", example: "completed" },
-            },
-          },
+          user: UserResponseItem,
         },
       },
     },

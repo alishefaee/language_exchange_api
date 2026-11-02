@@ -53,6 +53,7 @@ Deno.test({
       }),
     )
     const convData = await convRes.json()
+    console.log('convData:',convData)
     const conversationId = convData.data.conversation._id
 
     await t.step("POST /api/v1/conversations/:id/messages - Fails with empty message text", async () => {
