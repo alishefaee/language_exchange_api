@@ -19,7 +19,7 @@ Deno.test({
     )
     const dataA = await regA.json()
     const tokenA = dataA.data.access_token
-    const userAId = dataA.data.user.id
+    const userAId = dataA.data.user._id
 
     const regB = await app.request(
       new Request("http://localhost/api/v1/auth/register", {
@@ -29,7 +29,7 @@ Deno.test({
       }),
     )
     const dataB = await regB.json()
-    const userBId = dataB.data.user.id
+    const userBId = dataB.data.user._id
 
     const regBlocked = await app.request(
       new Request("http://localhost/api/v1/auth/register", {
@@ -39,7 +39,7 @@ Deno.test({
       }),
     )
     const dataBlocked = await regBlocked.json()
-    const blockedUserId = dataBlocked.data.user.id
+    const blockedUserId = dataBlocked.data.user._id
 
     await t.step("POST /api/v1/conversations/ - Fails without authentication", async () => {
       const req = new Request("http://localhost/api/v1/conversations/", {

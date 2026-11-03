@@ -30,7 +30,7 @@ Deno.test({
     )
     const dataB = await regB.json()
     const tokenB = dataB.data.access_token
-    const userBId = dataB.data.user.id
+    const userBId = dataB.data.user._id
 
     // Create conversation
     const convRes = await app.request(

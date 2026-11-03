@@ -13,6 +13,11 @@ export async function setupTestDB() {
       driverInfo: { name: "deno", version: "1.0" },
     })
   }
+
+  // Ensure all registered models (User, Session, etc.) have their unique indexes built
+  await Promise.all(
+    Object.values(mongoose.models).map((model) => model.syncIndexes()),
+  )
 }
 
 export async function teardownTestDB() {

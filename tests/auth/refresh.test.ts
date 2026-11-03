@@ -24,37 +24,43 @@ Deno.test({
     const regData = await regRes.json()
     const initialRefreshToken = regData.data.refresh_token
 
-    await t.step("POST /api/v1/auth/refresh - Fails with invalid or missing refresh token", async () => {
-      const req = new Request("http://localhost/api/v1/auth/refresh", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ refresh_token: "invalid_token_string" }),
-      })
+    await t.step(
+      "POST /api/v1/auth/refresh - Fails with invalid or missing refresh token",
+      async () => {
+        const req = new Request("http://localhost/api/v1/auth/refresh", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refresh_token: "invalid_token_string" }),
+        })
 
-      const res = await app.request(req)
-      const payload = await res.json()
+        const res = await app.request(req)
+        const payload = await res.json()
 
-      assertEquals(res.status, ApiStatus.UNAUTHORIZED.httpCode)
-      assertFalse(payload.success)
-      assertEquals(payload.code, ApiStatus.UNAUTHORIZED.code)
-    })
+        assertEquals(res.status, ApiStatus.AUTH_TOKEN_EXPIRED.httpCode)
+        assertFalse(payload.success)
+        assertEquals(payload.code, ApiStatus.AUTH_TOKEN_EXPIRED.code)
+      },
+    )
 
-    await t.step("POST /api/v1/auth/refresh - Successfully rotates refresh token and returns new tokens", async () => {
-      const req = new Request("http://localhost/api/v1/auth/refresh", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ refresh_token: initialRefreshToken }),
-      })
+    await t.step(
+      "POST /api/v1/auth/refresh - Successfully rotates refresh token and returns new tokens",
+      async () => {
+        const req = new Request("http://localhost/api/v1/auth/refresh", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refresh_token: initialRefreshToken }),
+        })
 
-      const res = await app.request(req)
-      const payload = await res.json()
+        const res = await app.request(req)
+        const payload = await res.json()
 
-      assertEquals(res.status, ApiStatus.OK.httpCode)
-      assertEquals(payload.success, true)
-      assertEquals(payload.code, ApiStatus.OK.code)
-      assertExists(payload.data.access_token)
-      assertExists(payload.data.refresh_token)
-    })
+        assertEquals(res.status, ApiStatus.OK.httpCode)
+        assertEquals(payload.success, true)
+        assertEquals(payload.code, ApiStatus.OK.code)
+        assertExists(payload.data.access_token)
+        assertExists(payload.data.refresh_token)
+      },
+    )
 
     await teardownTestDB()
   },

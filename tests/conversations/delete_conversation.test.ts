@@ -19,7 +19,7 @@ Deno.test({
     )
     const dataA = await regA.json()
     const tokenA = dataA.data.access_token
-    const userAId = dataA.data.user.id
+    const userAId = dataA.data.user._id
 
     const regB = await app.request(
       new Request("http://localhost/api/v1/auth/register", {
@@ -30,7 +30,7 @@ Deno.test({
     )
     const dataB = await regB.json()
     const tokenB = dataB.data.access_token
-    const userBId = dataB.data.user.id
+    const userBId = dataB.data.user._id
 
     const regOutsider = await app.request(
       new Request("http://localhost/api/v1/auth/register", {

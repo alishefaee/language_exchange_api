@@ -29,7 +29,7 @@ Deno.test({
       }),
     )
     const dataB = await regB.json()
-    const userBId = dataB.data.user.id
+    const userBId = dataB.data.user._id
 
     const regC = await app.request(
       new Request("http://localhost/api/v1/auth/register", {
@@ -39,7 +39,7 @@ Deno.test({
       }),
     )
     const dataC = await regC.json()
-    const userCId = dataC.data.user.id
+    const userCId = dataC.data.user._id
 
     await t.step("GET /api/v1/conversations/ - Fails without authentication", async () => {
       const req = new Request("http://localhost/api/v1/conversations/", {
@@ -144,7 +144,7 @@ Deno.test({
 
         // Hide conversation C for User A
         await Conversation.findByIdAndUpdate(convCId, {
-          $addToSet: { hiddenFor: dataA.data.user.id },
+          $addToSet: { hiddenFor: dataA.data.user._id },
         })
 
         const resAfterHide = await app.request(

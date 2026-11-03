@@ -27,7 +27,7 @@ Deno.test({
       }),
     )
     const dataB = await regB.json()
-    const userBId = dataB.data.user.id
+    const userBId = dataB.data.user._id
 
     const regOutsider = await app.request(
       new Request("http://localhost/api/v1/auth/register", {
