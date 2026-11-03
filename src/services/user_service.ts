@@ -1,14 +1,17 @@
 import { getLogger } from "@std/log"
 import { generateRandomUsername } from "../helpers/generate_random_username.ts"
-import { hashPassword, REFRESH_TOKEN_EXPIRATION_MS, TokenService } from "../helpers/security_helper.ts"
+import {
+  hashPassword,
+  REFRESH_TOKEN_EXPIRATION_MS,
+  TokenService,
+} from "../helpers/security_helper.ts"
 import { Session } from "../models/Session.ts"
 import { User } from "../models/User.ts"
 
 const logger = getLogger()
 
-
 export class UserService {
-   /**
+  /**
    * Validates uniqueness and creates a new user record.
    */
   static async createUser(data: { email: string; password: string }) {
@@ -25,14 +28,10 @@ export class UserService {
       await user.save()
       return user
     } catch (error: any) {
-      // 11000 is the standard MongoDB error code for a unique index violation
-      if (error.name === "MongoServerError" && error.code === 11000) {
-        // error.keyPattern will look like { email: 1 } or { username: 1 }
+      if (error.code === 11000) {
         logger.info(error.keyPattern)
         throw new Error("DUPLICATE_USER")
       }
-
-      // Re-throw any other database errors (e.g., validation failures or connection drops)
       throw error
     }
   }
@@ -82,7 +81,7 @@ export class UserService {
   static async revokeAllUserSessions(userId: string) {
     await Session.deleteMany({ userId })
   }
-  
+
   static async completeProfile(userId: string, profileData: any) {
     const updatePayload = {
       ...profileData,
