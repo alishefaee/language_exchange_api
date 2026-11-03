@@ -10,9 +10,11 @@ export const getConversations = async (c: Context<AppEnv>) => {
   try {
     const userId = c.get("jwtPayload").sub
 
-    const { page, limit } = c.req.query() as { page?: number; limit?: number }
+    const { page, limit } = c.req.query()
+    const pageNum = page ? Number(page) : undefined
+    const limitNum = limit ? Number(limit) : undefined
 
-    const result = await ConversationService.getUserConversations(userId, page, limit)
+    const result = await ConversationService.getUserConversations(userId, pageNum, limitNum)
     return reply.success(c, "OK", result)
   } catch (error: any) {
     logger.error(`Get Conversations Error: ${error.message}`)
@@ -86,12 +88,13 @@ export const getConversationMessages = async (c: Context<AppEnv>) => {
     const userId = c.get("jwtPayload").sub
 
     const conversationId = c.req.param("id")!
-    const { limit, before } = c.req.query() as { limit?: number; before?: string }
+    const { limit, before } = c.req.query()
+    const limitNum = limit ? Number(limit) : undefined
 
     const messages = await ConversationService.getMessages(
       conversationId,
       userId,
-      limit,
+      limitNum,
       before,
     )
 
