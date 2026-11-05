@@ -1,5 +1,4 @@
 import { Hono } from "hono"
-import { serveStatic } from "hono/deno"
 import * as authController from "./controllers/auth.ts"
 import * as userController from "./controllers/users.ts"
 import * as conversationController from "./controllers/conversations.ts"
@@ -27,7 +26,25 @@ export const router = new Hono()
 
 
 // Serve uploaded avatars statically (add to your main router or app.ts)
-router.use("/uploads/*", serveStatic({ root: "./" }))
+router.get("/uploads/avatars/:filename", async (c) => {
+  const filename = c.req.param("filename")
+  try {
+    const file = await Deno.readFile(`./uploads/avatars/${filename}`)
+    const ext = filename.split(".").pop()?.toLowerCase()
+    const mimeTypes: Record<string, string> = {
+      webp: "image/webp",
+      jpg: "image/jpeg",
+      jpeg: "image/jpeg",
+      png: "image/png",
+    }
+    return c.body(file, 200, {
+      "Content-Type": mimeTypes[ext || ""] || "application/octet-stream",
+      "Cache-Control": "public, max-age=31536000, immutable",
+    })
+  } catch {
+    return c.notFound()
+  }
+})
 
 // --- Public Routes ---
 router.post("/auth/register", validate("json", registerSchema), authController.register)
