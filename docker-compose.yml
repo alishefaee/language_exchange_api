@@ -1,39 +1,31 @@
-version: "3.8"
-
 services:
   app:
     build: .
     container_name: lang_app_api
     ports:
-      - "8000:8000" # Exposes the Hono API to the EC2 public IP
+      - "8000:8000"
+    env_file:
+      - .env
     environment:
-      # Use the service names instead of localhost
-      - MONGODB_URI=mongodb://mongodb:27017/lang_app
-      - MONGODB_URI_TEST=mongodb://mongodb_test:27017/lang_app_test
-      # Add other env vars here (e.g., JWT_SECRET)
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      # Persist uploaded avatars on the host EBS volume
+      - avatars_data:/app/uploads/avatars
     depends_on:
-      - mongodb
-      - mongodb_test
+      - redis
     restart: unless-stopped
 
-  mongodb:
-    image: mongo:latest
-    container_name: lang_app_db
+  redis:
+    image: redis:7-alpine
+    container_name: lang_app_redis
     ports:
-      - "27017:27017"
+      - "6379:6379"
     volumes:
-      - mongodb_data:/data/db
-    restart: unless-stopped
-
-  mongodb_test:
-    image: mongo:latest
-    container_name: lang_app_db_test
-    ports:
-      - "27018:27017" # Mapped to 27018 on the host to prevent port collision
-    volumes:
-      - mongodb_test_data:/data/db
+      - redis_data:/data
+    # Enable AOF persistence and cap RAM usage for EC2 t3.micro
+    command: redis-server --appendonly yes --maxmemory 128mb --maxmemory-policy allkeys-lru
     restart: unless-stopped
 
 volumes:
-  mongodb_data:
-  mongodb_test_data:
+  avatars_data:
+  redis_data:

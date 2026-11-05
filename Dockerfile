@@ -1,17 +1,23 @@
-FROM denoland/deno:alpine-1.42.0
+FROM denoland/deno:alpine
 
-# Set the working directory
 WORKDIR /app
 
-# Cache the dependencies as a separate step
+# Pre-create the avatars directory so the volume mount has proper path & permissions
+RUN mkdir -p /app/uploads/avatars && chown -R deno:deno /app
+
+# Cache dependencies
 COPY deno.json deno.lock ./
 RUN deno cache --lock=deno.lock || true
 
-# Copy the rest of the source code
+# Copy application source
 COPY . .
 
-# Cache the main application
+# Cache the main entrypoint
 RUN deno cache src/main.ts
 
-# Run the app (using your deno.json start task)
+# Declare the volume mount point for avatars
+VOLUME ["/app/uploads/avatars"]
+
+EXPOSE 8000
+
 CMD ["deno", "task", "start"]
