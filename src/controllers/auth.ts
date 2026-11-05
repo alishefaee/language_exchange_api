@@ -4,6 +4,7 @@ import { TokenService, verifyPassword } from "../helpers/security_helper.ts"
 import { reply } from "../helpers/api_resp.ts"
 import { getLogger } from "@std/log"
 import { AppEnv } from "../types/index.d.ts"
+import { TokenBlacklist } from "../helpers/redis.ts"
 
 const logger = getLogger()
 // --- Auth Controllers ---
@@ -111,22 +112,28 @@ export const refresh = async (c: Context) => {
   }
 }
 
-export const logout = async (c: Context) => {
+export const logout = async (c: Context<AppEnv>) => {
   try {
-    // Extract safely parsed token from the Zod validation middleware
     const { refresh_token } = await c.req.json<any>()
 
+    // 1. Revoke the refresh token in MongoDB
     if (refresh_token) {
-      // If the token is already expired/deleted by the TTL index,
-      // Mongoose silently handles it without throwing an error.
       await UserService.revokeSession(refresh_token)
+    }
+
+    // 2. Blacklist the current access token in Redis for its remaining TTL
+    const authHeader = c.req.header("Authorization")
+    const token = authHeader?.split(" ")[1]
+    const jwtPayload = c.get("jwtPayload")
+
+    if (token && jwtPayload?.exp) {
+      await TokenBlacklist.add(token, jwtPayload.exp)
     }
 
     return reply.success(c, "OK", {
       message: "Successfully logged out of current device",
     })
   } catch (error: any) {
-    // This block only catches genuine fatal errors (e.g., database connection loss)
     logger.error(`Logout Error: ${error.message}`)
     return reply.error(c, "INTERNAL_ERROR")
   }
