@@ -47,7 +47,11 @@ const PopulatedParticipantItem = {
   properties: {
     _id: { type: "string", example: "6ac9fd2581460a82416fa4aa" },
     username: { type: "string", example: "alex_lang" },
-    avatarUrl: { type: "string", format: "uri", example: "https://cdn.example.com/avatars/alex.jpg" },
+    avatarUrl: {
+      type: "string",
+      format: "uri",
+      example: "https://cdn.example.com/avatars/alex.jpg",
+    },
     lastLogin: { type: "string", format: "date-time", example: "2026-10-25T09:00:00.000Z" },
   },
 }
@@ -60,25 +64,6 @@ const PopulatedLastMessageItem = {
     text: { type: "string", example: "Hello! Would you like to practice Spanish?" },
     sender: { type: "string", example: "6ac9fd2581460a82416fa4aa" },
     createdAt: { type: "string", format: "date-time", example: "2026-10-25T10:15:30.000Z" },
-  },
-}
-
-const ConversationPopulatedItem = {
-  type: "object",
-  properties: {
-    _id: { type: "string", example: "671b89012c9d4e5f6a7b8c00" },
-    participants: {
-      type: "array",
-      items: PopulatedParticipantItem,
-    },
-    lastMessage: PopulatedLastMessageItem,
-    lastMessageAt: { type: "string", format: "date-time", example: "2026-10-25T10:15:30.000Z" },
-    hiddenFor: {
-      type: "array",
-      items: { type: "string", example: "6ac9fd2581460a82416fa4bb" },
-    },
-    createdAt: { type: "string", format: "date-time", example: "2026-10-25T10:00:00.000Z" },
-    updatedAt: { type: "string", format: "date-time", example: "2026-10-25T10:15:30.000Z" },
   },
 }
 
@@ -142,7 +127,7 @@ export const conversationSchemas = {
         properties: {
           conversations: {
             type: "array",
-            items: ConversationPopulatedItem,
+            items: ConversationItem, // Changed from ConversationPopulatedItem
           },
           pagination: {
             type: "object",

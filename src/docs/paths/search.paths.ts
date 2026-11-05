@@ -91,7 +91,7 @@ export const searchPaths = {
           description: "Paginated list of matching users",
           content: {
             "application/json": {
-              schema: searchUsersSchemas.Response200,
+              schema: searchUsersSchemas.SearchUsersResponse200,
             },
           },
         },
@@ -211,7 +211,8 @@ export const searchPaths = {
     patch: {
       tags: ["Search"],
       summary: "Edit a saved search preset",
-      description: "Updates the name or filter criteria of an existing saved search owned by the user.",
+      description:
+        "Updates the name or filter criteria of an existing saved search owned by the user.",
       security: [{ BearerAuth: [] }],
       parameters: [
         {

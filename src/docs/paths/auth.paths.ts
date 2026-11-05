@@ -9,23 +9,12 @@ export const authPaths = {
       tags: ["Authentication"],
       summary: "Register a new user",
       description: "Creates a new user account and returns access and refresh tokens.",
+      security: [],
       requestBody: {
         required: true,
         content: {
           "application/json": {
-            schema: {
-              type: "object",
-              required: ["email", "password"],
-              properties: {
-                email: { type: "string", format: "email", example: "user@example.com" },
-                password: {
-                  type: "string",
-                  format: "password",
-                  minLength: 8,
-                  example: "securepassword123",
-                },
-              },
-            },
+            schema: registerSchema.RegisterRequest, // Uses schema from register.schema.ts
           },
         },
       },
@@ -34,7 +23,7 @@ export const authPaths = {
           description: "User successfully created",
           content: {
             "application/json": {
-              schema: registerSchema.authRegisterSuccess,
+              schema: registerSchema.RegisterResponse201, // Fixed from authRegisterSuccess
             },
           },
         },
@@ -42,7 +31,7 @@ export const authPaths = {
           description: "Validation failed or email already taken",
           content: {
             "application/json": {
-              schema: registerSchema.authRegister400,
+              schema: registerSchema.RegisterResponse400, // Fixed from authRegister400
             },
           },
         },
@@ -53,12 +42,13 @@ export const authPaths = {
     post: {
       tags: ["Authentication"],
       summary: "User login",
+      security: [],
       requestBody: {
         required: true,
         content: {
           "application/json": {
             schema: {
-              stype: "object",
+              type: "object", // Fixed typo from stype: "object"
               required: ["email", "password"],
               properties: {
                 email: { type: "string", format: "email" },
@@ -77,11 +67,11 @@ export const authPaths = {
             },
           },
         },
-        "401": {
-          description: "Invalid credentials",
+        "404": {
+          description: "Invalid credentials or user not found",
           content: {
             "application/json": {
-              schema: loginSchema.authLogin401,
+              schema: loginSchema.authLogin404, // Fixed from loginSchema.authLogin401
             },
           },
         },

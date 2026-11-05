@@ -1,52 +1,6 @@
 // Inside src/docs/schemas/search/search-users.schemas.ts:
 import { UserResponseItem } from "../common.ts"
 
-const LanguageLevel = {
-  type: "object",
-  properties: {
-    languageCode: { type: "string", minLength: 2, maxLength: 3, example: "en" },
-    proficiency: {
-      type: "string",
-      enum: ["beginner", "intermediate", "advanced", "fluent", "native"],
-      example: "native",
-    },
-  },
-}
-
-const SearchedUserItem = {
-  type: "object",
-  properties: {
-    _id: { type: "string", example: "6aca2c9a423540e305ec9244" },
-    username: { type: "string", example: "user91879756" },
-    bio: { type: "string", example: "Love music, travel, and learning languages over coffee!" },
-    avatarUrl: {
-      type: "string",
-      format: "uri",
-      nullable: true,
-      example: "https://example.com/avatar.jpg",
-    },
-    dateOfBirth: { type: "string", format: "date-time", example: "1998-05-14T00:00:00.000Z" },
-    age: { type: "integer", example: 28 },
-    gender: {
-      type: "string",
-      enum: ["male", "female", "non-binary", "other", "prefer_not_to_say"],
-      example: "female",
-    },
-    religion: { type: "string", nullable: true, example: "agnostic" },
-    countryOfOrigin: { type: "string", example: "BR" },
-    countryOfResidence: { type: "string", example: "DE" },
-    nativeLanguages: { type: "array", items: LanguageLevel },
-    learningLanguages: { type: "array", items: LanguageLevel },
-    lastLogin: { type: "string", format: "date-time", example: "2026-10-18T11:30:00.000Z" },
-    lastUpdatedProfile: {
-      type: "string",
-      format: "date-time",
-      example: "2026-10-15T09:15:00.000Z",
-    },
-    onboardingStep: { type: "string", example: "completed" },
-  },
-}
-
 export const searchUsersSchemas = {
   SearchUsersResponse200: {
     type: "object",

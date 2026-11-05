@@ -14,7 +14,6 @@ export const onboardingProfileSchema = z.object({
   nativeLanguages: z.array(languageLevelSchema).optional(),
   learningLanguages: z.array(languageLevelSchema).optional(),
   bio: z.string().max(300).trim().optional(),
-  avatarUrl: z.url().optional(),
 })
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB

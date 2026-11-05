@@ -23,7 +23,6 @@ export const onboardingSchema = {
         items: LanguageLevelItem,
       },
       bio: { type: "string", maxLength: 300, example: "Looking for German native speakers!" },
-      avatarUrl: { type: "string", format: "uri", example: "https://example.com/avatar.jpg" },
     },
   },
   OnboardingResponse200: {
