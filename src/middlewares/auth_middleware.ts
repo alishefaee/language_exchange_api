@@ -2,7 +2,7 @@ import type { Context, Next } from "hono"
 import { TokenService } from "../helpers/security_helper.ts"
 import { TokenBlacklist } from "../helpers/redis.ts"
 import { reply } from "../helpers/api_resp.ts"
-import type { AppEnv } from "../types/index.ts"
+import { AppEnv } from "../types/index.d.ts"
 
 export const requireAuth = async (c: Context<AppEnv>, next: Next) => {
   const authHeader = c.req.header("Authorization")
@@ -16,7 +16,7 @@ export const requireAuth = async (c: Context<AppEnv>, next: Next) => {
   // 1. Verify cryptographic signature and expiration in memory first (free & fast)
   const decodedPayload = await TokenService.verifyAccessToken(token)
   if (!decodedPayload || !decodedPayload.sub) {
-    return reply.error(c, "AUTH_TOKEN_EXPIRED", { message: "Access token expired or invalid" })
+    return reply.error(c, "UNAUTHORIZED", { message: "Missing or invalid Authorization header" })
   }
 
   // 2. Check Redis denylist to ensure the token wasn't logged out
