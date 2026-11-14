@@ -466,14 +466,10 @@
       "npm:@hono/zod-validator@~0.9.1",
       "npm:bcryptjs@^3.0.3",
       "npm:hono@^4.13.9",
+      "npm:ioredis@6",
       "npm:mongoose@^9.10.2",
       "npm:sharp@~0.35.5",
       "npm:zod@^4.6.5"
-    ],
-    "packageJson": {
-      "dependencies": [
-        "npm:ioredis@6"
-      ]
-    }
+    ]
   }
 }

@@ -26,6 +26,7 @@
     "@std/log": "jsr:@std/log@^0.224.14",
     "bcryptjs": "npm:bcryptjs@^3.0.3",
     "hono": "npm:hono@^4.13.9",
+    "ioredis": "npm:ioredis@^6.0.0",
     "mongoose": "npm:mongoose@^9.10.2",
     "sharp": "npm:sharp@^0.35.5",
     "zod": "npm:zod@^4.6.5"
